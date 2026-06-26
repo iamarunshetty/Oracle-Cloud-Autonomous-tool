@@ -2,6 +2,8 @@
 
 A production-ready **desktop application** for Oracle Fusion IAM / user-management tasks, built with Python and [CustomTkinter](https://github.com/TomSchimansky/CustomTkinter).
 
+📖 **[User Guide](docs/user_guide.md)** – step-by-step instructions for every feature of the app.
+
 ---
 
 ## Features
