@@ -156,3 +156,107 @@ def confirm(parent, title: str, message: str) -> bool:
     """Show a confirmation dialog. Returns True if confirmed."""
     dlg = ConfirmDialog(parent, title, message)
     return dlg.result
+
+
+class SodWarningDialog(ctk.CTkToplevel):
+    """
+    Modal dialog shown when SOD conflicts are detected on a role assignment.
+
+    Displays each conflict with its description and lets the user either cancel
+    the assignment or proceed anyway (override).  Returns True when the user
+    chooses to proceed.
+    """
+
+    def __init__(self, parent, proposed_role: str, conflicts: list) -> None:
+        super().__init__(parent)
+        self.title("⚠  SOD Conflict Detected")
+        self.resizable(False, False)
+        self.result = False
+        self._build(proposed_role, conflicts)
+        self.grab_set()
+        self.wait_window()
+
+    def _build(self, proposed_role: str, conflicts: list) -> None:
+        self.geometry("480x360")
+        outer = ctk.CTkFrame(self, fg_color="transparent")
+        outer.pack(fill="both", expand=True, padx=20, pady=16)
+
+        # Header
+        ctk.CTkLabel(
+            outer,
+            text="⚠  Segregation of Duties Warning",
+            font=ctk.CTkFont(size=14, weight="bold"),
+            text_color=WARNING_ORANGE,
+            anchor="w",
+        ).pack(anchor="w", pady=(0, 6))
+
+        ctk.CTkLabel(
+            outer,
+            text=f"Assigning '{proposed_role}' conflicts with the user's existing roles:",
+            font=ctk.CTkFont(size=12),
+            wraplength=440,
+            justify="left",
+            anchor="w",
+        ).pack(anchor="w", pady=(0, 8))
+
+        # Scrollable conflict list
+        scroll = ctk.CTkScrollableFrame(outer, height=140, fg_color="#1a1a2e")
+        scroll.pack(fill="x", pady=(0, 12))
+
+        for conflict in conflicts:
+            item = ctk.CTkFrame(scroll, fg_color="transparent")
+            item.pack(fill="x", padx=6, pady=3)
+            ctk.CTkLabel(
+                item,
+                text=f"• {conflict.conflicting_role}",
+                font=ctk.CTkFont(size=11, weight="bold"),
+                text_color=ERROR_RED,
+                anchor="w",
+            ).pack(anchor="w")
+            if conflict.description:
+                ctk.CTkLabel(
+                    item,
+                    text=f"  {conflict.description}",
+                    font=ctk.CTkFont(size=10),
+                    text_color="#aaaaaa",
+                    wraplength=420,
+                    justify="left",
+                    anchor="w",
+                ).pack(anchor="w")
+
+        ctk.CTkLabel(
+            outer,
+            text="Proceeding may violate your organisation's compliance policy.",
+            font=ctk.CTkFont(size=11),
+            text_color=WARNING_ORANGE,
+            wraplength=440,
+            justify="left",
+            anchor="w",
+        ).pack(anchor="w", pady=(0, 12))
+
+        btn_row = ctk.CTkFrame(outer, fg_color="transparent")
+        btn_row.pack()
+        primary_button(btn_row, "Cancel Assignment", command=self._cancel).pack(
+            side="left", padx=6
+        )
+        secondary_button(btn_row, "Assign Anyway", command=self._proceed).pack(
+            side="left", padx=6
+        )
+
+    def _proceed(self) -> None:
+        self.result = True
+        self.destroy()
+
+    def _cancel(self) -> None:
+        self.result = False
+        self.destroy()
+
+
+def sod_warning(parent, proposed_role: str, conflicts: list) -> bool:
+    """
+    Show a SOD conflict warning dialog.
+
+    Returns True if the user chooses to assign the role anyway, False to cancel.
+    """
+    dlg = SodWarningDialog(parent, proposed_role, conflicts)
+    return dlg.result

@@ -9,6 +9,7 @@ import customtkinter as ctk
 from app.api.client import APIError
 from app.services.audit_service import AuditService
 from app.services.role_service import RoleService
+from app.services.sod_service import SodService
 from app.ui import widgets as W
 from app.utils.validators import validate_required
 
@@ -18,6 +19,7 @@ class RoleManagementFrame(ctk.CTkFrame):
         super().__init__(parent, fg_color="transparent")
         self._role_svc = role_service
         self._audit_svc = audit_service
+        self._sod_svc = SodService()
         self._current_roles: list[dict] = []
         self._build()
 
@@ -106,6 +108,25 @@ class RoleManagementFrame(ctk.CTkFrame):
         if not ok_u or not ok_r:
             W.set_status(self._status, " | ".join(filter(None, [err_u, err_r])), "error")
             return
+
+        # SOD conflict check
+        existing_role_names = [
+            r.get("roleName", r.get("displayName", "")) for r in self._current_roles
+        ]
+        conflicts = self._sod_svc.check_conflicts(role_name, existing_role_names)
+        if conflicts:
+            self._audit_svc.record(
+                "SOD_CONFLICT",
+                username,
+                "warning",
+                f"SOD conflict detected assigning '{role_name}': "
+                + ", ".join(c.conflicting_role for c in conflicts),
+            )
+            proceed = W.sod_warning(self, role_name, conflicts)
+            if not proceed:
+                W.set_status(self._status, "Assignment cancelled due to SOD conflict.", "warning")
+                return
+
         try:
             self._role_svc.assign_role(username, role_name)
             self._audit_svc.record("ASSIGN_ROLE", username, "success", f"Role '{role_name}' assigned.")

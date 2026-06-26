@@ -1,0 +1,75 @@
+{
+  "_comment": "Oracle Fusion SOD (Segregation of Duties) conflict rules. Add, remove, or edit rules to match your organisation's compliance policy. Both role_a and role_b values are matched case-insensitively.",
+  "rules": [
+    {
+      "role_a": "ORA_AP_ACCOUNTS_PAYABLE_SPECIALIST_JOB",
+      "role_b": "ORA_AR_ACCOUNTS_RECEIVABLE_SPECIALIST_JOB",
+      "description": "Accounts Payable and Accounts Receivable must be held by different users to prevent payment fraud."
+    },
+    {
+      "role_a": "ORA_AP_ACCOUNTS_PAYABLE_SPECIALIST_JOB",
+      "role_b": "ORA_AP_PAYMENT_PROCESSING_DUTY",
+      "description": "Invoice entry and payment processing must be segregated to prevent unauthorised payments."
+    },
+    {
+      "role_a": "ORA_AP_SUPPLIER_MAINTENANCE_DUTY",
+      "role_b": "ORA_AP_ACCOUNTS_PAYABLE_SPECIALIST_JOB",
+      "description": "Supplier master maintenance and invoice entry must be segregated to prevent fictitious vendor fraud."
+    },
+    {
+      "role_a": "ORA_AP_SUPPLIER_MAINTENANCE_DUTY",
+      "role_b": "ORA_AP_PAYMENT_PROCESSING_DUTY",
+      "description": "Supplier master maintenance and payment processing must be segregated."
+    },
+    {
+      "role_a": "ORA_GL_GENERAL_ACCOUNTANT_JOB",
+      "role_b": "ORA_GL_ACCOUNTING_MANAGER_JOB",
+      "description": "General ledger journal entry and journal approval/posting must be held by different users."
+    },
+    {
+      "role_a": "ORA_GL_JOURNAL_ENTRY_DUTY",
+      "role_b": "ORA_GL_JOURNAL_APPROVAL_DUTY",
+      "description": "Journal entry and journal approval must be segregated."
+    },
+    {
+      "role_a": "ORA_PO_PURCHASE_REQUESTER_ABSTRACT",
+      "role_b": "ORA_PO_BUYER_JOB",
+      "description": "Purchase requesters must not also act as buyers to prevent self-approved purchases."
+    },
+    {
+      "role_a": "ORA_PO_BUYER_JOB",
+      "role_b": "ORA_PO_PROCUREMENT_MANAGER_JOB",
+      "description": "Buying and procurement approval should be held by different users."
+    },
+    {
+      "role_a": "ORA_EXM_EXPENSE_ENTRY_DUTY",
+      "role_b": "ORA_EXM_EXPENSE_APPROVAL_DUTY",
+      "description": "Expense submission and expense approval must not be held by the same user."
+    },
+    {
+      "role_a": "ORA_FA_ASSET_ADDITION_DUTY",
+      "role_b": "ORA_FA_ASSET_RETIREMENT_DUTY",
+      "description": "Fixed asset additions and asset retirement/disposal should be segregated."
+    },
+    {
+      "role_a": "ORA_CE_CASH_MANAGEMENT_ANALYST_JOB",
+      "role_b": "ORA_AP_ACCOUNTS_PAYABLE_SPECIALIST_JOB",
+      "description": "Cash management and accounts payable entry should be held by different users."
+    },
+    {
+      "role_a": "ORA_INV_INVENTORY_MANAGER_JOB",
+      "role_b": "ORA_PO_BUYER_JOB",
+      "description": "Inventory management and purchasing should be segregated to prevent inventory fraud."
+    },
+    {
+      "role_a": "ORA_HR_HUMAN_RESOURCE_SPECIALIST_JOB",
+      "role_b": "ORA_PAY_PAYROLL_ADMINISTRATOR_JOB",
+      "description": "HR employee record maintenance and payroll processing must be segregated."
+    },
+    {
+      "role_a": "ORA_PAY_PAYROLL_ADMINISTRATOR_JOB",
+      "role_b": "ORA_PAY_PAYROLL_APPROVAL_DUTY",
+      "description": "Payroll entry and payroll approval must be held by different users."
+    }
+  ]
+}
