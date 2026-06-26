@@ -1,0 +1,15 @@
+{
+  "_comment": "Copy this file to config.json. Do NOT commit config.json. Secrets should preferably live in .env.",
+  "oracle": {
+    "base_url": "https://your-instance.oraclecloud.com",
+    "username": "",
+    "password": "",
+    "token": "",
+    "timeout": 30,
+    "retry_count": 3
+  },
+  "app": {
+    "log_level": "INFO",
+    "audit_file": "audit_log.csv"
+  }
+}
