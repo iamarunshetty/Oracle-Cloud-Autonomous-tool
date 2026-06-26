@@ -1,0 +1,22 @@
+# Core UI
+PySide6>=6.6.0
+
+# Configuration
+python-dotenv>=1.0.0
+
+# Data processing & Excel export
+pandas>=2.0.0
+openpyxl>=3.1.0
+
+# PDF export
+reportlab>=4.0.0
+
+# Testing
+pytest>=8.0.0
+pytest-qt>=4.4.0
+
+# Linting (optional – used by Makefile lint target)
+ruff>=0.4.0
+
+# Packaging (install manually when building EXE)
+# pyinstaller>=6.0.0
