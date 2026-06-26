@@ -12,7 +12,8 @@ class TestSettings:
     def test_default_fusion_url(self) -> None:
         """Default URL placeholder is present when env var is not set."""
         s = Settings()
-        assert "oraclecloud.com" in s.fusion_base_url
+        # Verify the default is a well-formed Fusion cloud URL placeholder
+        assert s.fusion_base_url.startswith("https://") and s.fusion_base_url.endswith(".oraclecloud.com")
 
     def test_env_override(self, monkeypatch: pytest.MonkeyPatch) -> None:
         """FUSION_BASE_URL env var overrides the default."""
